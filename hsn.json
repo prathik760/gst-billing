@@ -1,0 +1,20 @@
+[
+  {
+    "hsn": "1006",
+    "description": "Rice (other than pre-packaged and labelled)",
+    "gst_rate": 5,
+    "keywords": ["rice", "basmati", "grain"]
+  },
+  {
+    "hsn": "1101",
+    "description": "Wheat or meslin flour",
+    "gst_rate": 5,
+    "keywords": ["wheat", "atta", "flour"]
+  },
+  {
+    "hsn": "2106",
+    "description": "Protein supplements",
+    "gst_rate": 18,
+    "keywords": ["protein", "supplement", "health"]
+  }
+]
