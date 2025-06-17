@@ -1,20 +1,72 @@
 [
   {
-    "hsn": "1006",
-    "description": "Rice (other than pre-packaged and labelled)",
-    "gst_rate": 5,
-    "keywords": ["rice", "basmati", "grain"]
+    "hsn": "1001",
+     
+    "gst_rate": 0,
+    "uqc": "kg",
+    "keywords": ["wheat", "grain"]
   },
   {
-    "hsn": "1101",
-    "description": "Wheat or meslin flour",
+    "hsn": "1006",
+     
+    "gst_rate": 0,
+    "uqc": "kg",
+    "keywords": ["rice", "grain"]
+  },
+  {
+    "hsn": "1701",
+     
     "gst_rate": 5,
-    "keywords": ["wheat", "atta", "flour"]
+    "uqc": "kg",
+    "keywords": ["sugar"]
+  },
+  {
+    "hsn": "2202",
+     
+    "gst_rate": 28,
+    "uqc": "lt",
+    "keywords": ["soda", "soft drink", "beverage"]
+  },
+  {
+    "hsn": "3401",
+     
+    "gst_rate": 18,
+    "uqc": "pcs",
+    "keywords": ["soap", "toiletries"]
+  },
+  {
+    "hsn": "3305",
+     
+    "gst_rate": 18,
+    "uqc": "pcs",
+    "keywords": ["shampoo", "hair oil"]
   },
   {
     "hsn": "2106",
-    "description": "Protein supplements",
+    
     "gst_rate": 18,
-    "keywords": ["protein", "supplement", "health"]
+    "uqc": "box",
+    "keywords": ["protein", "food supplement"]
+  },
+  {
+    "hsn": "8483",
+     
+    "gst_rate": 18,
+    "uqc": "pcs",
+    "keywords": ["bearing", "gear"]
+  },
+  {
+    "hsn": "8528",
+    
+    "gst_rate": 18,
+    "uqc": "pcs",
+    "keywords": ["tv", "television"]
+  },
+  {
+    "hsn": "9403",
+     
+    "gst_rate": 12,
+    "uqc": "pcs",
+    "keywords": ["chair", "table", "furniture"]
   }
 ]

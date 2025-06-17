@@ -1,22 +1,28 @@
 import React from 'react';
 
-const units = ["box", "tin", "kg", "litre", "piece"];
+const uqcOptions = [
+  { code: 'box', label: 'Box' },
+  { code: 'pcs', label: 'Pieces' },
+  { code: 'kg', label: 'Kilogram' },
+  { code: 'lt', label: 'Litre' }
+];
+
+const gstSlabs = [0, 5, 12, 18, 28];
 
 export default function InvoiceRow({ row, index, onChange, onDelete, hsnData }) {
   const handleItemChange = (e) => {
     const value = e.target.value;
-
-    // Find matching HSN by description or keywords
     const match = hsnData.find(item =>
-      item.description.toLowerCase().includes(value.toLowerCase()) ||
+      item.description?.toLowerCase().includes(value.toLowerCase()) ||
       (item.keywords || []).some(k => k.toLowerCase().includes(value.toLowerCase()))
     );
-
     onChange(index, {
       ...row,
       itemName: value,
       hsn: match?.hsn || "",
-      gstRate: match?.gst_rate || 0
+      gstRate: match?.gst_rate || 0,
+      description: match?.description || "",
+      unit: match?.uqc || row.unit
     });
   };
 
@@ -24,91 +30,52 @@ export default function InvoiceRow({ row, index, onChange, onDelete, hsnData }) 
     onChange(index, { ...row, [field]: value });
   };
 
-  // Convert quantity, rate, gstRate safely to numbers
-  const quantityNum = Number(row.quantity) || 0;
-  const rateNum = Number(row.rate) || 0;
-  const gstRateNum = Number(row.gstRate) || 0;
+  const qty = Number(row.quantity) || 0;
+  const rate = Number(row.rate) || 0;
+  const gstRate = Number(row.gstRate) || 0;
+  const taxable = qty * rate;
 
-  const taxableValue = quantityNum * rateNum;
-  const tax = (taxableValue * gstRateNum) / 100;
+  const halfGST = ((taxable * gstRate) / 200).toFixed(2); // CGST and SGST
+  const fullGST = ((taxable * gstRate) / 100).toFixed(2); // IGST
+  const cess = Number(row.cess || 0).toFixed(2);
 
   return (
     <tr>
       <td>
-        <input
-          type="text"
-          value={row.itemName}
-          onChange={handleItemChange}
-          placeholder="Item Name"
-        />
+        <input type="text" value={row.itemName} onChange={handleItemChange} />
+        {row.description && <small>{row.description}</small>}
       </td>
+      <td><input type="text" value={row.hsn} readOnly /></td>
       <td>
-        <input
-          type="text"
-          value={row.hsn}
-          readOnly
-          placeholder="HSN Code"
-        />
-      </td>
-      <td>
-        <input
-          type="number"
-          value={row.gstRate}
-          readOnly
-          placeholder="GST Rate"
-        />
-      </td>
-      <td>
-        <select
-          value={row.unit}
-          onChange={e => handleFieldChange("unit", e.target.value)}
-        >
-          {units.map(u => (
-            <option key={u} value={u}>{u}</option>
-          ))}
+        <select value={row.gstRate} onChange={e => handleFieldChange("gstRate", Number(e.target.value))}>
+          {gstSlabs.map(rate => <option key={rate} value={rate}>{rate}%</option>)}
         </select>
       </td>
       <td>
-        <input
-          type="number"
-          min="0"
-          value={row.quantity}
-          onChange={e => {
-            const val = e.target.value;
-            handleFieldChange("quantity", val === "" ? "" : Number(val));
-          }}
-          placeholder="Quantity"
-        />
+        <select value={row.unit} onChange={e => handleFieldChange("unit", e.target.value)}>
+          {uqcOptions.map(u => <option key={u.code} value={u.code}>{u.label}</option>)}
+        </select>
       </td>
+      <td>
+        <input type="text" value={row.quantity} onChange={e => handleFieldChange("quantity", Number(e.target.value))} />
+      </td>
+      <td>
+        <input type="text" value={row.rate} onChange={e => handleFieldChange("rate", Number(e.target.value))} />
+      </td>
+      <td>₹{taxable.toFixed(2)}</td>
+      <td>₹{halfGST}</td>
+      <td>₹{halfGST}</td>
+      <td>₹{fullGST}</td>
       <td>
         <input
           type="number"
-          min=" "
-          value={row.rate}
-          onChange={e => {
-            const val = e.target.value;
-            handleFieldChange("rate", val === "" ? "" : Number(val));
-          }}
-          placeholder="Rate per Unit"
+          value={row.cess}
+          onChange={e => handleFieldChange("cess", Number(e.target.value))}
+          style={{ width: "60px" }}
         />
       </td>
-      <td>{taxableValue.toFixed(2)}</td>
-      <td>{tax.toFixed(2)}</td>
       <td>
-        <button
-          onClick={() => onDelete(index)}
-          aria-label="Delete row"
-          title="Delete row"
-          style={{
-            background: "transparent",
-            border: "none",
-            color: "red",
-            fontSize: "18px",
-            cursor: "pointer",
-          }}
-        >
-          🗑
-        </button>
+        <button onClick={() => onDelete(index)} style={{ color: 'red', border: 'none', background: 'transparent' }}>🗑</button>
       </td>
     </tr>
   );

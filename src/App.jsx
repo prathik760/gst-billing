@@ -1,21 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import InvoiceRow from './Invice'; // Make sure your InvoiceRow component is imported correctly
+import InvoiceRow from './Invice';
 import './App.css';
 
 function App() {
   const [rows, setRows] = useState([]);
   const [hsnData, setHsnData] = useState([]);
 
-  // Load HSN data only on mount (no localStorage load)
   useEffect(() => {
-    fetch('/hsn.json')
+    fetch('./hsn.json')
       .then(res => res.json())
       .then(data => setHsnData(data));
   }, []);
 
-  // Add item, merge if exists by itemName (case-insensitive)
   const addRow = () => {
-    // Start with empty item for user input
     setRows([...rows, {
       itemName: "",
       hsn: "",
@@ -23,21 +20,8 @@ function App() {
       unit: "box",
       quantity: 1,
       rate: 0,
+      cess: 0
     }]);
-  };
-
-  // You can also implement a function to add a specific item programmatically:
-  const addOrIncrementItem = (newItem) => {
-    const existingIndex = rows.findIndex(row => row.itemName.toLowerCase() === newItem.itemName.toLowerCase());
-    if (existingIndex >= 0) {
-      // Increment quantity of existing item
-      const updatedRows = [...rows];
-      updatedRows[existingIndex].quantity += newItem.quantity || 1;
-      setRows(updatedRows);
-    } else {
-      // Add as new item
-      setRows([...rows, newItem]);
-    }
   };
 
   const updateRow = (index, updatedRow) => {
@@ -50,9 +34,7 @@ function App() {
     setRows(rows.filter((_, i) => i !== index));
   };
 
-  const clearAll = () => {
-    setRows([]);
-  };
+  const clearAll = () => setRows([]);
 
   const totalTaxable = rows.reduce((sum, r) => sum + r.quantity * r.rate, 0);
   const totalTax = rows.reduce((sum, r) => sum + (r.quantity * r.rate * r.gstRate) / 100, 0);
@@ -61,7 +43,6 @@ function App() {
   return (
     <div className="container">
       <h2>GST Billing Software</h2>
-
       <table className="table">
         <thead>
           <tr>
@@ -72,7 +53,10 @@ function App() {
             <th>Qty</th>
             <th>Rate (₹)</th>
             <th>Taxable (₹)</th>
-            <th>Tax (₹)</th>
+            <th>CGST (₹)</th>
+            <th>SGST (₹)</th>
+            <th>IGST (₹)</th>
+            <th>Cess (₹)</th>
             <th>Action</th>
           </tr>
         </thead>
